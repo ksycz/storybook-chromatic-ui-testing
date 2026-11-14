@@ -1,0 +1,26 @@
+name: Chromatic (Storybook)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  chromatic-storybook:
+    name: chromatic-storybook
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Chromatic needs full history to find the baseline
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          onlyChanged: true # TurboSnap: only snapshot stories affected by the change
+          exitZeroOnChanges: true # visual changes wait for review in Chromatic instead of failing the job
+          autoAcceptChanges: main # merged changes become the new baseline
