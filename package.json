@@ -11,14 +11,18 @@
     "typecheck": "tsc -b",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "screenshots": "node scripts/take-screenshots.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@chromatic-com/playwright": "^1.0.0",
     "@chromatic-com/storybook": "latest",
+    "@playwright/test": "^1.65.1",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
     "@storybook/addon-vitest": "^10.6.7",
@@ -29,6 +33,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser-playwright": "latest",
     "@vitest/coverage-v8": "latest",
+    "chromatic": "^18.14.4",
     "oxlint": "^1.90.0",
     "playwright": "latest",
     "storybook": "^10.6.7",
