@@ -28,9 +28,18 @@ A small workshop-booking app (React, TypeScript, Vite) built to show a complete 
 | User flows | Playwright | Booking works, validation blocks bad input, sold-out workshops cannot be booked, double submit books once |
 | How the whole page looks | Chromatic snapshots taken from the Playwright tests | The composed page and its key states look as approved |
 
+## How the tools fit together
+
+1. **Storybook** holds each component in isolation, in every state that matters (for example Button: primary, secondary, disabled, loading). Each story can also have a `play` function, which acts like a user would: it clicks, types and presses Escape, and then asserts. In CI these run as Vitest tests, and any accessibility violation found by axe fails the run. This covers *whether a component works and is accessible*.
+2. **Chromatic** takes a screenshot of every story on every PR and compares it with the approved baseline. A change shows as a before/after diff that someone accepts or rejects. This covers *whether a component still looks the same*.
+3. **Playwright** opens the real built app in a browser and tests user flows: book a workshop, see validation errors, try the sold-out workshop. This covers *whether the pieces work together*, which components in isolation can't show.
+4. **Chromatic again, on the Playwright tests.** Each Playwright test also uploads the page as it looked at the end of the test, so the full page is reviewed visually in the same place. This covers *whether the whole page still looks the same*.
+
+**Why both, in one sentence:** Storybook with Chromatic is quick to run and shows exactly which component changed. Playwright with Chromatic shows whether the real page and its flows still work and look right, and Chromatic is the one place to review all visual changes.
+
 **Why the page has no stories:** each layer has one owner. Stories cover components, Playwright covers the page, and Chromatic reviews the look of both in one place.
 
-**Why no Playwright `toHaveScreenshot()`:** it would be a second visual baseline for the same UI, tied to the operating system that produced it. Chromatic already reviews the pages.
+**Why no Playwright `toHaveScreenshot()`:** that would be a second set of baselines for the same UI, and Playwright screenshots differ between operating systems. Chromatic renders everything in its own browser in the cloud, so the images stay the same whichever machine ran the tests.
 
 ## The pipelines
 
