@@ -49,19 +49,19 @@ Three workflows run on every pull request and on pushes to `main`:
 - `chromatic-storybook`: publishes Storybook to Chromatic and snapshots the stories. TurboSnap limits it to stories affected by the change.
 - `e2e`: runs the Playwright tests, keeps the HTML report as an artifact, then uploads the page archives to a second Chromatic project.
 
-Chromatic jobs do not fail on visual changes. The Chromatic status check on the PR stays pending until someone accepts or rejects the changes, and accepted changes on `main` become the new baseline. The intended merge gate is: `ci`, `e2e` and both Chromatic checks. All three workflows skip changes that only touch Markdown files or `docs/`, so editing the README does not start a run.
+Chromatic jobs do not fail on visual changes. The Chromatic status check on the PR stays pending until someone accepts or rejects the changes, and accepted changes on `main` become the new baseline. `main` is protected by a ruleset: every change goes through a pull request, and force pushes and deletion are blocked. All three workflows skip changes that only touch Markdown files or `docs/`, so editing the README does not start a run. For that reason the checks are not marked as required in the ruleset (a required check that never starts would block a README-only pull request); they are reviewed on every pull request that changes code.
 
 ## See it catch a regression
 
 [The demo pull request](https://github.com/ksycz/storybook-chromatic-ui-testing/pull/4) changes the primary colour and a button's padding. All functional tests still pass, but Chromatic shows the difference both at component level and on the full page.
 
-**Component level (Storybook project).** The `Button: Primary` story, with the baseline from `main` on the left and the demo branch on the right. Chromatic highlights the changed pixels in green, and the new button is also 16 px taller because of the padding change.
+**Component level (Storybook project).** The `Button: Primary` story, with the baseline from `main` on the left and the demo branch on the right. Chromatic highlights the changed pixels in green, and the new button is also 8 px taller because of the padding change (Chromatic snapshots at 2x, so the diff reports 16 px).
 
-![Chromatic diff of the Button Primary story: the baseline button is blue, the changed one is highlighted in green and is taller](docs/images/chromatic-component-diff.png)
+![Chromatic diff of the Button Primary story: the baseline button is blue, the changed one is highlighted in green and is 8 px taller](docs/images/chromatic-component-diff.png)
 
-**Page level (Playwright project).** The `empty schedule` page snapshot taken by the Playwright suite. The same colour and padding change shows up on the real page, where the snapshot grew from 2560x1264 to 2560x1280.
+**Page level (Playwright project).** The `empty schedule` page snapshot taken by the Playwright suite. The same colour and padding change shows up on the real page, where the page grew by the same 8 px (2560x1264 to 2560x1280 in Chromatic's 2x snapshot).
 
-![Chromatic diff of the full booking page: the Book my seat button is highlighted in green and the page is 16 px taller](docs/images/chromatic-page-diff.png)
+![Chromatic diff of the full booking page: the Book my seat button is highlighted in green and the page is 8 px taller](docs/images/chromatic-page-diff.png)
 
 ## Run it locally
 
@@ -87,6 +87,13 @@ To upload to Chromatic yourself, create a project at [chromatic.com](https://www
 ## Snapshot cost
 
 Chromatic's free plan includes 5,000 snapshots per month. One full build here is 21 stories plus 8 page snapshots. TurboSnap skips stories a change cannot affect, so most pull requests use far fewer.
+
+## Limitations and next steps
+
+- **Chromium only.** The Playwright tests and Chromatic snapshots use one browser. Next step: add Firefox and WebKit as Playwright projects and enable the same browsers in Chromatic.
+- **Fake backend.** `submitBooking` resolves after 300 ms with a made-up confirmation number, so there is no network, no server-side validation and no real double-booking to detect. Next step: mock the API with MSW in Storybook and Playwright so error and slow-network states can be tested too.
+- **Checks are not required by the ruleset**, because docs-only pull requests skip them (see above). Next step: an always-passing job for docs-only changes, so `ci`, `e2e` and both Chromatic checks can be required.
+- **Small UX gaps worth testing next:** the error summary does not move focus to the first invalid field, and the form can still be edited while a booking is being sent.
 
 ## Design and plan
 

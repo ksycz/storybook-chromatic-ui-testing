@@ -32,7 +32,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
-      - uses: chromaui/action@latest
+      - uses: chromaui/action@v18
         with:
           playwright: true # upload the page archives captured by the Playwright tests
           projectToken: ${{ secrets.CHROMATIC_PLAYWRIGHT_TOKEN }}
