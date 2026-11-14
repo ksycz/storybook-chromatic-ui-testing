@@ -11,35 +11,50 @@ type ModalProps = {
 
 export function Modal({ open, title, onClose, children }: ModalProps) {
   const titleId = useId()
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    if (open) closeRef.current?.focus()
+    const dialog = dialogRef.current
+    if (!open || !dialog || dialog.open) return
+    // A native modal dialog makes everything behind it inert, so focus can't leave it.
+    dialog.showModal()
+    closeRef.current?.focus()
   }, [open])
+
+  // Closing the native dialog first hands focus back to whatever had it before it opened.
+  function requestClose() {
+    dialogRef.current?.close()
+    onClose()
+  }
 
   if (!open) return null
 
   return (
-    <div className="modal__backdrop">
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="modal"
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') onClose()
-        }}
-      >
-        <h2 id={titleId} className="modal__title">
-          {title}
-        </h2>
-        <div>{children}</div>
-        <div className="modal__actions">
-          <Button ref={closeRef} onClick={onClose}>
-            Close
-          </Button>
-        </div>
+    <dialog
+      ref={dialogRef}
+      aria-labelledby={titleId}
+      className="modal"
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault() // we close it ourselves, so the browser's cancel doesn't fire twice
+          requestClose()
+        }
+      }}
+      onCancel={(event) => {
+        event.preventDefault()
+        requestClose()
+      }}
+    >
+      <h2 id={titleId} className="modal__title">
+        {title}
+      </h2>
+      <div>{children}</div>
+      <div className="modal__actions">
+        <Button ref={closeRef} onClick={requestClose}>
+          Close
+        </Button>
       </div>
-    </div>
+    </dialog>
   )
 }
