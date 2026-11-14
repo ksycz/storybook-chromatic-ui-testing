@@ -56,7 +56,7 @@ To upload to Chromatic yourself, create a project at [chromatic.com](https://www
 
 ## Snapshot cost
 
-Chromatic's free plan includes 5,000 snapshots per month. One full build here is about 28 stories plus 7 page snapshots. TurboSnap skips stories a change cannot affect, so most pull requests use far fewer.
+Chromatic's free plan includes 5,000 snapshots per month. One full build here is 21 stories plus 7 page snapshots. TurboSnap skips stories a change cannot affect, so most pull requests use far fewer.
 
 ## Design and plan
 
