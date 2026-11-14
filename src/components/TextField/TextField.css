@@ -1,0 +1,34 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 280px;
+}
+
+.field__label {
+  font-weight: 600;
+}
+
+.field__control {
+  font: inherit;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.field__control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field__control:disabled {
+  background: #e3e6ec;
+  color: var(--color-muted);
+}
+
+.field__error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.875rem;
+}
