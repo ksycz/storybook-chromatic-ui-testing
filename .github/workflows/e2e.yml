@@ -2,8 +2,14 @@ name: E2E (Playwright + Chromatic)
 
 on:
   pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
   push:
     branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
 
 jobs:
   e2e:
