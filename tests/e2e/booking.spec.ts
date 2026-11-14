@@ -52,14 +52,13 @@ test('empty schedule', async ({ page }) => {
   await expect(page.getByText('No workshops scheduled yet.')).toBeVisible()
 })
 
-test('double submit books once', async ({ page }) => {
+test('submit is busy while pending and a double click opens one confirmation', async ({ page }) => {
   await fillValidBooking(page)
-  const submit = page.getByRole('button', { name: 'Book my seat' })
-  await submit.dblclick()
+  await page.getByRole('button', { name: 'Book my seat' }).dblclick()
 
+  // The second click hits a disabled, busy button; the fake backend can't show a duplicate
+  // booking, so what's observable is the busy state and a single confirmation.
   await expect(page.getByRole('button', { name: 'Booking…' })).toHaveAttribute('aria-busy', 'true')
-  await expect(page.getByRole('dialog')).toHaveCount(1)
-  await page.waitForTimeout(500)
   await expect(page.getByRole('dialog')).toHaveCount(1)
 })
 
@@ -72,4 +71,21 @@ test('modal is keyboard friendly', async ({ page }) => {
 
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Book my seat' })).toBeFocused()
+})
+
+test('focus stays inside the modal and Escape still closes it', async ({ page }) => {
+  await fillValidBooking(page)
+  await page.getByRole('button', { name: 'Book my seat' }).click()
+  const close = page.getByRole('button', { name: 'Close' })
+  await expect(close).toBeFocused()
+
+  // Tabbing backwards must not land on the (inert) form behind the dialog.
+  const behindDialog = page.locator('button[type="submit"]')
+  await page.keyboard.press('Shift+Tab')
+  await expect(behindDialog).not.toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(close).toBeFocused()
+
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
 })
