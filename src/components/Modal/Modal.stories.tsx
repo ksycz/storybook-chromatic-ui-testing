@@ -19,7 +19,8 @@ type Story = StoryObj<typeof meta>
 
 export const Open: Story = {
   play: async ({ canvasElement, args }) => {
-    const dialog = within(canvasElement).getByRole('dialog', { name: 'Booking confirmed' })
+    // The dialog opens in an effect right after the first render, so wait for it instead of expecting it at once.
+    const dialog = await within(canvasElement).findByRole('dialog', { name: 'Booking confirmed' })
     await waitFor(() => expect(within(dialog).getByRole('button', { name: 'Close' })).toHaveFocus())
     await userEvent.keyboard('{Escape}')
     await expect(args.onClose).toHaveBeenCalledTimes(1)
