@@ -55,6 +55,14 @@ Chromatic jobs do not fail on visual changes. The Chromatic status check on the 
 
 [The demo pull request](https://github.com/ksycz/storybook-chromatic-ui-testing/pull/4) changes the primary colour and a button's padding. All functional tests still pass, but Chromatic shows the difference both at component level and on the full page.
 
+**Component level (Storybook project).** The `Button: Primary` story, with the baseline from `main` on the left and the demo branch on the right. Chromatic highlights the changed pixels in green, and the new button is also 16 px taller because of the padding change.
+
+![Chromatic diff of the Button Primary story: the baseline button is blue, the changed one is highlighted in green and is taller](docs/images/chromatic-component-diff.png)
+
+**Page level (Playwright project).** The `empty schedule` page snapshot taken by the Playwright suite. The same colour and padding change shows up on the real page, where the snapshot grew from 2560x1264 to 2560x1280.
+
+![Chromatic diff of the full booking page: the Book my seat button is highlighted in green and the page is 16 px taller](docs/images/chromatic-page-diff.png)
+
 ## Run it locally
 
 ```bash
