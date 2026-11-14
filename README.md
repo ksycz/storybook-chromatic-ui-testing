@@ -6,6 +6,16 @@
 
 A small workshop-booking app (React, TypeScript, Vite) built to show a complete UI testing workflow: components tested in isolation in Storybook, user flows tested end to end with Playwright, and every visual change reviewed and approved in Chromatic on the pull request. Everything runs in GitHub Actions.
 
+## What it looks like
+
+| Booking page | Validation errors |
+|---|---|
+| ![Booking page with three workshop cards and the booking form](docs/images/booking-page.png) | ![Booking form showing an error summary and field errors](docs/images/validation-errors.png) |
+
+| Confirmation dialog | Storybook component explorer |
+|---|---|
+| ![Booking confirmed dialog over the page](docs/images/confirmation-modal.png) | ![Storybook with the WorkshopCard stories open](docs/images/storybook.png) |
+
 ## What is tested where
 
 | What | Tool | What it proves |
@@ -42,6 +52,7 @@ npx playwright install chromium
 npm run storybook   # component explorer at http://localhost:6006
 npm test            # unit tests + every story as a test (interaction + a11y)
 npm run e2e         # builds the app, serves it, runs the Playwright tests
+npm run build && npm run build-storybook && npm run screenshots   # regenerates docs/images
 ```
 
 To upload to Chromatic yourself, create a project at [chromatic.com](https://www.chromatic.com) and run `npx chromatic --project-token=<token>` (Storybook) or `npx chromatic --playwright --project-token=<token>` (after `npm run e2e`). In CI the tokens are the repository secrets `CHROMATIC_PROJECT_TOKEN` (Storybook project) and `CHROMATIC_PLAYWRIGHT_TOKEN` (Playwright project).
