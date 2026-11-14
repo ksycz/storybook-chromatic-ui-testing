@@ -2,8 +2,14 @@ name: Chromatic (Storybook)
 
 on:
   pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
   push:
     branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
 
 jobs:
   chromatic-storybook:

@@ -49,7 +49,7 @@ Three workflows run on every pull request and on pushes to `main`:
 - `chromatic-storybook`: publishes Storybook to Chromatic and snapshots the stories. TurboSnap limits it to stories affected by the change.
 - `e2e`: runs the Playwright tests, keeps the HTML report as an artifact, then uploads the page archives to a second Chromatic project.
 
-Chromatic jobs do not fail on visual changes. The Chromatic status check on the PR stays pending until someone accepts or rejects the changes, and accepted changes on `main` become the new baseline. The intended merge gate is: `ci`, `e2e` and both Chromatic checks.
+Chromatic jobs do not fail on visual changes. The Chromatic status check on the PR stays pending until someone accepts or rejects the changes, and accepted changes on `main` become the new baseline. The intended merge gate is: `ci`, `e2e` and both Chromatic checks. All three workflows skip changes that only touch Markdown files or `docs/`, so editing the README does not start a run.
 
 ## See it catch a regression
 
