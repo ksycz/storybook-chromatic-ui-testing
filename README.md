@@ -4,6 +4,8 @@
 [![Chromatic (Storybook)](https://github.com/ksycz/storybook-chromatic-ui-testing/actions/workflows/chromatic.yml/badge.svg)](https://github.com/ksycz/storybook-chromatic-ui-testing/actions/workflows/chromatic.yml)
 [![E2E](https://github.com/ksycz/storybook-chromatic-ui-testing/actions/workflows/e2e.yml/badge.svg)](https://github.com/ksycz/storybook-chromatic-ui-testing/actions/workflows/e2e.yml)
 
+**[Live Storybook](https://main--6af8b288ec94864c522d8fae.chromatic.com)** (published by Chromatic from `main`)
+
 A small workshop-booking app (React, TypeScript, Vite) built to show a complete UI testing workflow: components tested in isolation in Storybook, user flows tested end to end with Playwright, and every visual change reviewed and approved in Chromatic on the pull request. Everything runs in GitHub Actions.
 
 ## What it looks like
